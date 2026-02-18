@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EMTTRACKER.Models
 {
-    [Table("USUARIO")]
+    [Table("USUARIOS")]
     public class Usuario
     {
         [Key]

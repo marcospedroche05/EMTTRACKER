@@ -1,7 +1,29 @@
+using EMTTRACKER.Data;
+using EMTTRACKER.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Configurar el esquema de Autenticación
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/Index"; // A dónde redirigir si no está logeado
+        options.AccessDeniedPath = "/Home/Index"; // A dónde ir si no tiene rol suficiente
+        options.ExpireTimeSpan = TimeSpan.FromHours(8); // Duración de la sesión
+    });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IRepositoryLogin, RepositoryLogin>();
+string connectionString = builder.Configuration.GetConnectionString("SqlEmt");
+builder.Services.AddDbContext<EmtContext>
+    (options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
@@ -16,6 +38,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+// MIDDLEWARE DE AUTENTICACIÓN
 app.UseAuthentication();
 
 app.UseAuthorization();
