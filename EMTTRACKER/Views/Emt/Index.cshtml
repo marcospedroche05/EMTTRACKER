@@ -1,4 +1,20 @@
 ﻿@{
     ViewData["COLORLAYOUT"] = "#2a5298";
+    ViewData["CONTROLLER"] = ViewContext.RouteData.Values["Controller"]?.ToString();
 }
-<h2>Buscador de buses <span class="text-primary">EMT</span></h2>
+<div class="p-4 border-bottom border-1 border-primary d-flex w-100 align-items-center">
+
+    <div>
+        <h2 class="mb-0">Buscador de buses <span class="text-primary">EMT</span></h2>
+    </div>
+
+    <div class="ms-auto">
+        <form method="post" class="d-flex gap-2">
+            <input class="form-control" name="codigo" type="text" placeholder="Código de parada" />
+            <button class="btn btn-primary text-light">
+                Buscar
+            </button>
+        </form>
+    </div>
+
+</div>

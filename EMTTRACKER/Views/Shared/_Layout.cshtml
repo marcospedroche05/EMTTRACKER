@@ -1,5 +1,6 @@
 ﻿@{
     string color = ViewData["COLORLAYOUT"]?.ToString() ?? "transparent";
+    string controller = ViewData["CONTROLLER"]?.ToString();
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -10,24 +11,35 @@
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EMTTRACKER.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header style="background-color: @color">
-        <nav class='navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3'>
+    <header style="background: @color">
+        <nav class='navbar navbar-expand-sm navbar-toggleable-sm'>
             <div class="container-fluid">
-                <a class="navbar-brand text-light" asp-area="" asp-controller="Home" asp-action="Index">EMTTRACKER</a>
+                <a class="navbar-brand text-light" asp-area="" asp-controller="@controller" asp-action="Index">EMTTRACKER</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse d-sm-inline-flex">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="@controller" asp-action="Index">
+                                <div class="nav-icon-container">
+                                    <img src="~/images/search.png" alt="Buscar"/>
+                                    <span class="nav-icon-label">Buscar</span>
+                                </div>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="@controller" asp-action="Index">
+                                <div class="nav-icon-container">
+                                    <img src="~/images/favoritos.png" alt="Favoritos"/>
+                                    <span class="nav-icon-label">Favoritos</span>
+                                </div>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -40,7 +52,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-light" style="background-color: @color">
+    <footer class="border-top footer text-light" style="background: @color">
         <div class="container">
             &copy; 2026 - EMTTRACKER - Marcos Pedroche Pérez
         </div>
