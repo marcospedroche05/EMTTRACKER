@@ -1,6 +1,9 @@
-﻿@{
+﻿@model List<VParadaUrbana>
+@{
     ViewData["COLORLAYOUT"] = "#2a5298";
     ViewData["CONTROLLER"] = ViewContext.RouteData.Values["Controller"]?.ToString();
+    VParadaUrbana paradaBuscada = ViewData["PARADABUSCADA"] as VParadaUrbana;
+    
 }
 <div class="p-4 border-bottom border-1 border-primary d-flex w-100 align-items-center">
 
@@ -16,5 +19,34 @@
             </button>
         </form>
     </div>
-
 </div>
+
+@if (paradaBuscada != null)
+{
+    <div class="w-100 border-bottom border-1 border-primary p-3 d-flex align-items-center gap-3">
+        <img src="~/images/bus_azul.png" width="30" height="30"/> 
+        <h6 class="mb-0"><span class="fw-bold">#@paradaBuscada.Codigo</span> | @paradaBuscada.Nombre</h6>
+        <div class="d-flex gap-2 ms-auto flex-wrap">
+            @foreach (Linea linea in paradaBuscada.Lineas)
+            {
+                <div class="badge bg-primary text-light">@linea.Codigo</div>
+            }
+        </div>
+    </div>
+}
+else if (Model != null)
+{
+    @foreach (VParadaUrbana parada in Model)
+    {
+        <div class="w-100 border-bottom border-1 border-primary p-3 d-flex align-items-center gap-3">
+            <img src="~/images/bus_azul.png" width="30" height="30"/> 
+            <h6 class="mb-0"><span class="fw-bold">#@parada.Codigo</span> | @parada.Nombre</h6>
+            <div class="d-flex gap-2 ms-auto flex-wrap">
+                @foreach (Linea linea in parada.Lineas)
+                {
+                    <div class="badge bg-primary text-light">@linea.Codigo</div>
+                }
+            </div>
+        </div>
+    }
+}

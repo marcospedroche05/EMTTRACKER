@@ -9,5 +9,8 @@ namespace EMTTRACKER.Data
         {}
 
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Parada> Paradas { get; set; }
+        public DbSet<VParadaUrbana> ParadasUrbanas { get; set; }
+        public DbSet<Linea> Lineas { get; set; }
     }
 }

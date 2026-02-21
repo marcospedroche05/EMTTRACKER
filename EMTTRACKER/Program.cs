@@ -21,6 +21,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<IRepositoryLogin, RepositoryLogin>();
+builder.Services.AddTransient<IRepositoryEmt, RepositoryEmt>();
 string connectionString = builder.Configuration.GetConnectionString("SqlEmt");
 builder.Services.AddDbContext<EmtContext>
     (options => options.UseSqlServer(connectionString));
