@@ -1,0 +1,209 @@
+/* Página de Horas - Estilos */
+
+.horas-header {
+    border-bottom: 2px solid #0d6efd;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.horas-header h1 {
+    margin: 0;
+    font-weight: bold;
+}
+
+/* Botón de Favoritos */
+.btn-favorito {
+    background-color: transparent;
+    border: 2px solid #0d6efd;
+    border-radius: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-favorito:hover {
+    background-color: #0d6efd;
+    transform: scale(1.05);
+}
+
+.btn-favorito img {
+    width: 32px;
+    height: 32px;
+    filter: brightness(0) saturate(100%) invert(32%) sepia(98%) saturate(2068%) hue-rotate(207deg) brightness(98%) contrast(101%);
+}
+
+.btn-favorito:hover img {
+    filter: brightness(0) invert(1);
+}
+
+/* Próximo Bus - Card destacado */
+.proximo-bus-container {
+    margin-bottom: 40px;
+    padding: 20px;
+}
+
+.proximo-bus-label {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 20px;
+}
+
+.proximo-bus-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 2px solid #0d6efd;
+    display: flex;
+    overflow: hidden;
+    min-height: 150px;
+}
+
+.proximo-bus-linea {
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.proximo-bus-linea h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.proximo-bus-info {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.proximo-bus-info h4 {
+    margin: 0;
+    color: #212529;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.tiempo-restante {
+    color: #0d6efd;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Lista de Horarios */
+.horarios-lista-container {
+    padding: 20px;
+}
+
+.horarios-lista-titulo {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.horario-item {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-left: 4px solid #0d6efd;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.horario-item:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateX(5px);
+    border-left-width: 6px;
+}
+
+.horario-linea {
+    background-color: #0d6efd;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    min-width: 80px;
+    text-align: center;
+    margin-right: 20px;
+}
+
+.horario-hora {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #212529;
+}
+
+.horario-tiempo {
+    font-size: 1rem;
+    color: #6c757d;
+    margin-left: auto;
+    padding-left: 20px;
+}
+
+/* Mensaje sin horarios */
+.sin-horarios {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+}
+
+.sin-horarios h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .proximo-bus-card {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .proximo-bus-linea {
+        min-width: 100%;
+        padding: 20px;
+    }
+
+    .proximo-bus-info {
+        padding: 20px;
+    }
+
+    .proximo-bus-linea h2 {
+        font-size: 2rem;
+    }
+
+    .proximo-bus-info h4 {
+        font-size: 1.1rem;
+    }
+
+    .horario-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .horario-linea {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .horario-tiempo {
+        margin-left: 0;
+        padding-left: 0;
+    }
+}

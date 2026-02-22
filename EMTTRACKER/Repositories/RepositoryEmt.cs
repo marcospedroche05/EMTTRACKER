@@ -28,6 +28,26 @@ using Microsoft.EntityFrameworkCore;
 //	INNER JOIN LINEAS L ON L.IDLINEA = R.IDLINEA
 //GO
 
+
+//VISTA PARA OBTENER TODOS LOS HORARIOS QUE ESTAN POR VENIR
+
+//CREATE VIEW V_HORARIOS_RUTAPARADA_URBANO
+//AS
+//	SELECT 
+//        ROW_NUMBER() OVER (ORDER BY L.CODIGO, H.HORASALIDA, P.CODIGO) AS ID,
+//        P.CODIGO AS PARADA,
+//        L.CODIGO AS LINEA,
+//        CONVERT(VARCHAR(5), DATEADD(MINUTE, RP.TIEMPODESDEINICIO, H.HORASALIDA), 108) AS HORAESTIMADA 
+//    FROM HORARIOS H 
+//    INNER JOIN RUTAS R ON H.IDRUTA = R.IDRUTA
+//    INNER JOIN RUTA_PARADA RP ON RP.IDRUTA = R.IDRUTA
+//    INNER JOIN LINEAS L ON L.IDLINEA = R.IDLINEA
+//    INNER JOIN PARADAS P ON RP.IDPARADA = P.IDPARADA
+//    WHERE DATEADD(MINUTE, RP.TIEMPODESDEINICIO, H.HORASALIDA) > CONVERT(TIME, GETDATE())
+//    AND L.TIPO = 'Urbano'
+//GO
+
+
 #endregion
 
 namespace EMTTRACKER.Repositories
@@ -46,29 +66,6 @@ namespace EMTTRACKER.Repositories
             this.cn = new SqlConnection(connectionString);
             this.com = new SqlCommand();
             this.com.Connection = this.cn;
-        }
-
-        public async Task<List<Parada>> GetAllParadasAsync()
-        {
-            var consulta = from datos in this.context.Paradas
-                           select datos;
-            return await consulta.ToListAsync();
-        }
-
-        public async Task<Parada> FindParadaByCodigoAsync(int codigo)
-        {
-            var consulta = from datos in this.context.Paradas
-                           where datos.Codigo == codigo
-                           select datos;
-            return await consulta.FirstOrDefaultAsync();
-        }
-
-        public async Task<Parada> FindParadaByIdAsync(int id)
-        {
-            var consulta = from datos in this.context.Paradas
-                           where datos.IdParada == id
-                           select datos;
-            return await consulta.FirstOrDefaultAsync();
         }
 
         public async Task<List<VParadaUrbana>> GetAllParadasUrbano()
@@ -124,6 +121,16 @@ namespace EMTTRACKER.Repositories
             this.com.Parameters.Clear();
 
             return lineas;
+        }
+
+        public async Task<List<VHorariosParadaUrbanos>> GetHorariosParadaUrbano(int codigo)
+        {
+            var consulta = from datos in this.context.VistaHorariosUrbanos
+                           where datos.Codigo == codigo
+                           select datos;
+            List<VHorariosParadaUrbanos> horarios = await consulta.ToListAsync();
+            horarios = horarios.OrderBy(x => x.HoraEstimada).ToList();
+            return horarios;
         }
     }
 }

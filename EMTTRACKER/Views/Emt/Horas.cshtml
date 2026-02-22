@@ -1,0 +1,59 @@
+﻿@model List<VHorariosParadaUrbanos>
+@{
+    ViewData["COLORLAYOUT"] = "#2a5298";
+    ViewData["CONTROLLER"] = ViewContext.RouteData.Values["Controller"]?.ToString();
+}
+
+<link rel="stylesheet" href="~/css/horas.css" />
+
+<div class="horas-header d-flex align-items-center justify-content-between">
+    <h1 class="text-primary mb-0">Horas estimadas</h1>
+    <button class="btn-favorito">
+        <img src="~/images/favoritos.png" alt="Añadir a favoritos" />
+    </button>
+</div>
+
+@if (Model != null && Model.Count > 0)
+{
+    TimeSpan ahora = DateTime.Now.TimeOfDay;
+    TimeSpan horaBus = TimeSpan.Parse(Model[0].HoraEstimada);
+    int minutos = (int)(horaBus - ahora).TotalMinutes;
+
+    <div class="proximo-bus-container">
+        <h3 class="proximo-bus-label">Próximo bus</h3>
+        <div class="proximo-bus-card">
+            <div class="proximo-bus-linea bg-primary d-flex justify-content-center align-items-center">
+                <h2 class="text-light m-0">@Model[0].Linea</h2>
+            </div>
+            <div class="proximo-bus-info">
+                <h4 class="mb-2">@Model[0].HoraEstimada</h4>
+                <span class="fw-bold">Quedan @minutos min.</span>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Count > 1)
+    {
+        <div class="horarios-lista-container mb-4">
+            <h3 class="horarios-lista-titulo">Próximos horarios</h3>
+            
+            @for (int i = 1; i < Model.Count; i++)
+            {
+                TimeSpan horaSiguiente = TimeSpan.Parse(Model[i].HoraEstimada);
+                int minutosSiguiente = (int)(horaSiguiente - ahora).TotalMinutes;
+
+                <div class="horario-item">
+                    <div class="horario-linea">@Model[i].Linea</div>
+                    <div class="horario-hora">@Model[i].HoraEstimada</div>
+                </div>
+            }
+        </div>
+    }
+}
+else
+{
+    <div class="sin-horarios">
+        <h3>No hay horarios disponibles</h3>
+        <p>No se encontraron horarios para esta parada en este momento.</p>
+    </div>
+}

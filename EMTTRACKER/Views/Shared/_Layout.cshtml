@@ -26,6 +26,14 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex">
                     <ul class="navbar-nav">
                         <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Menu" asp-action="Index">
+                                <div class="nav-icon-container">
+                                    <img src="~/images/menu.png" alt="Menú"/>
+                                    <span class="nav-icon-label">Menú</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="@controller" asp-action="Index">
                                 <div class="nav-icon-container">
                                     <img src="~/images/search.png" alt="Buscar"/>
@@ -36,7 +44,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="@controller" asp-action="Index">
                                 <div class="nav-icon-container">
-                                    <img src="~/images/favoritos.png" alt="Favoritos"/>
+                                    <img src="~/images/favorito_fill.png" alt="Favoritos"/>
                                     <span class="nav-icon-label">Favoritos</span>
                                 </div>
                             </a>

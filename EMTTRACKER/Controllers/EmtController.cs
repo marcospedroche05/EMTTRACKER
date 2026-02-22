@@ -32,5 +32,12 @@ namespace EMTTRACKER.Controllers
             }
             return View();
         }
+
+
+        public async Task<IActionResult> Horas(int codigo)
+        {
+            List<VHorariosParadaUrbanos> horarios = await this.repo.GetHorariosParadaUrbano(codigo);
+            return View(horarios);
+        }
     }
 }
