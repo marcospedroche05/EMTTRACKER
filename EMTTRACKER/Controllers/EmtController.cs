@@ -16,6 +16,10 @@ namespace EMTTRACKER.Controllers
         public async Task<IActionResult> Index()
         {
             List<VParadaUrbana> paradas = await this.repo.GetAllParadasUrbano();
+            if (paradas != null)
+            {
+                paradas = paradas.OrderBy(x => x.Codigo).ToList();
+            }
             return View(paradas);
         }
         [HttpPost]

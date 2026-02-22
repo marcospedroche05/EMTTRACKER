@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 //CREATE VIEW V_Paradas_Emt
 //as
-//	SELECT P.IDPARADA, P.CODIGO, P.NOMBRE FROM PARADAS P INNER JOIN RUTA_PARADA RP
+//	SELECT DISTINCT P.IDPARADA, P.CODIGO, P.NOMBRE FROM PARADAS P INNER JOIN RUTA_PARADA RP
 //	ON P.IDPARADA = RP.IDPARADA
 //	INNER JOIN RUTAS R ON RP.IDRUTA = R.IDRUTA
 //	INNER JOIN LINEAS L ON L.IDLINEA = R.IDLINEA
@@ -75,8 +75,7 @@ namespace EMTTRACKER.Repositories
         {
             var consulta = from datos in this.context.ParadasUrbanas
                            select datos;
-            List<VParadaUrbana> paradas = new List<VParadaUrbana>();
-            paradas = await consulta.ToListAsync();
+            List<VParadaUrbana> paradas = await consulta.ToListAsync();
 
             foreach (VParadaUrbana parada in paradas)
             {
