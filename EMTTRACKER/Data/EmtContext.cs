@@ -13,5 +13,6 @@ namespace EMTTRACKER.Data
         public DbSet<VParadaUrbana> ParadasUrbanas { get; set; }
         public DbSet<Linea> Lineas { get; set; }
         public DbSet<VHorariosParadaUrbanos> VistaHorariosUrbanos { get; set; }
+        public DbSet<Favorita> Favoritas { get; set; }
     }
 }

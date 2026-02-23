@@ -132,5 +132,33 @@ namespace EMTTRACKER.Repositories
             horarios = horarios.OrderBy(x => x.HoraEstimada).ToList();
             return horarios;
         }
+
+        public async Task<Favorita> FindFavoritaAsync(int idUsuario, int codigo)
+        {
+            var consulta = from datos in this.context.Favoritas
+                           where datos.IdUsuario == idUsuario &&
+                           datos.IdParada == codigo
+                           select datos;
+            return await consulta.FirstOrDefaultAsync();
+        }
+
+        public async Task InsertFavoritaAsync(int idUsuario, int codigo, string nombre)
+        {
+            Favorita favorita = new Favorita
+            {
+                IdUsuario = idUsuario,
+                IdParada = codigo,
+                Alias = nombre
+            };
+            await this.context.Favoritas.AddAsync(favorita);
+            await this.context.SaveChangesAsync();
+        }
+
+        public async Task DeleteFavoritaAsync(int idUsuario, int codigo)
+        {
+            Favorita favorita = await this.FindFavoritaAsync(idUsuario, codigo);
+            this.context.Favoritas.Remove(favorita);
+            await this.context.SaveChangesAsync();
+        }
     }
 }
