@@ -3,6 +3,8 @@ using EMTTRACKER.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 #region VIEWS
 
@@ -45,6 +47,20 @@ using Microsoft.EntityFrameworkCore;
 //    INNER JOIN PARADAS P ON RP.IDPARADA = P.IDPARADA
 //    WHERE DATEADD(MINUTE, RP.TIEMPODESDEINICIO, H.HORASALIDA) > CONVERT(TIME, GETDATE())
 //    AND L.TIPO = 'Urbano'
+//GO
+
+
+
+//OBTENER LAS PARADAS FAVORITAS QUE TIENE EL USUARIO REFERENTES A LA PESTAÑA DE EMT
+
+//CREATE VIEW V_PARADAS_FAVORITAS_URBANO
+//AS
+//	SELECT DISTINCT F.IDUSUARIO, F.IDPARADA, P.CODIGO, F.ALIAS FROM FAVORITAS F
+//	INNER JOIN PARADAS P ON F.IDPARADA = P.IDPARADA
+//	INNER JOIN RUTA_PARADA RP ON RP.IDPARADA = F.IDPARADA
+//	INNER JOIN RUTAS R ON R.IDRUTA = RP.IDRUTA 
+//	INNER JOIN LINEAS L ON L.IDLINEA = R.IDLINEA
+//	WHERE L.TIPO = 'Urbano'
 //GO
 
 
@@ -167,6 +183,45 @@ namespace EMTTRACKER.Repositories
                            where datos.Codigo == codigo
                            select datos;
             return await consulta.FirstOrDefaultAsync();
+        }
+
+        public async Task<List<VParadaUrbana>> GetFavoritasUrbanasAsync(int idUsuario)
+        {
+            string sql = "SELECT * FROM V_PARADAS_FAVORITAS_URBANO WHERE IDUSUARIO = @idusuario";
+            this.com.Parameters.AddWithValue("@idusuario", idUsuario);
+            this.com.CommandType = System.Data.CommandType.Text;
+            this.com.CommandText = sql;
+
+            await this.cn.OpenAsync();
+            List<VParadaUrbana> favoritasUrbano = new List<VParadaUrbana>();
+            this.reader = await this.com.ExecuteReaderAsync();
+            while (await this.reader.ReadAsync())
+            {
+                VParadaUrbana favorita = new VParadaUrbana
+                {
+                    IdParada = int.Parse(this.reader["IDPARADA"].ToString()),
+                    Codigo = int.Parse(this.reader["CODIGO"].ToString()),
+                    Nombre = this.reader["ALIAS"].ToString()
+                };
+                favoritasUrbano.Add(favorita);
+            }
+            await this.reader.CloseAsync();
+            await this.cn.CloseAsync();
+            this.com.Parameters.Clear();
+
+            foreach(VParadaUrbana favorita in favoritasUrbano)
+            {
+                favorita.Lineas = await this.GetLineasByCodigoParadaAsync(favorita.Codigo);
+            }
+
+            return favoritasUrbano;
+        }
+
+        public async Task AsignarAlias(int idUsuario, int codigo, string alias)
+        {
+            Favorita favorita = await this.FindFavoritaAsync(idUsuario, codigo);
+            favorita.Alias = alias;
+            await this.context.SaveChangesAsync();
         }
     }
 }

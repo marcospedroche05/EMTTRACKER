@@ -11,5 +11,7 @@ namespace EMTTRACKER.Repositories
         public Task<Favorita> FindFavoritaAsync(int idUsuario, int codigo);
         public Task InsertFavoritaAsync(int idUsuario, int codigo, string nombre);
         public Task DeleteFavoritaAsync(int idUsuario, int codigo);
+        public Task<List<VParadaUrbana>> GetFavoritasUrbanasAsync(int idUsuario);
+        public Task AsignarAlias(int idUsuario, int codigo, string alias);
     }
 }

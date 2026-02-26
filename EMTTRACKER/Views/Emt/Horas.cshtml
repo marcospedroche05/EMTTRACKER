@@ -2,23 +2,68 @@
 @{
     ViewData["COLORLAYOUT"] = "#2a5298";
     ViewData["CONTROLLER"] = ViewContext.RouteData.Values["Controller"]?.ToString();
+    string nombreParada = ViewData["NOMBREPARADA"]?.ToString() ?? "";
+    bool esFavorita = ViewData["ESFAVORITA"] as bool? ?? false;
     int codigo = int.Parse(ViewData["CODIGO"].ToString());
     Usuario usuario = Context.Session.GetObject<Usuario>("USUARIO");
+    string mensaje = TempData["MENSAJE"] as string;
 }
 
 <link rel="stylesheet" href="~/css/horas.css" />
 
 <div class="horas-header d-flex align-items-center justify-content-between">
-    <h1 class="text-primary mb-0">Horas estimadas</h1>
+    <div class="d-flex align-items-center gap-3 flex-grow-1">
+        <h1 class="text-primary mb-0" id="tituloParada">Horas estimadas | <span id="nombreParada">@nombreParada</span></h1>
+        @if(usuario != null && esFavorita)
+        {
+            //SI ESTOY LOGADO Y TENGO ESTA PARADA COMO FAVORITA, PUEDO VER ESTE BOTON
+            //QUE ME PERMITE CAMBIAR EL ALIAS DE LA PARADA FAVORITA
+            <button type="button" class="btn-editar" id="btnEditarNombre" onclick="editarNombre()">
+                <img src="~/images/edit.png" width="24" height="24" alt="Editar" />
+            </button>
+        }
+    </div>
+    
     @if(usuario != null)
     {
-        <a asp-controller="Emt" asp-action="AgregarFavorita" asp-route-codigo="@codigo">
-            <button class="btn-favorito">
-                <img src="~/images/favoritos.png" alt="Añadir a favoritos" />
-            </button>
-        </a>
+        //COMPRUEBO SI EL USUARIO ESTÁ LOGADO, SI LO ESTÁ VEO SI LA PARADA EN LA QUE 
+        //ESTOY ESTA REGISTRADA COMO FAVORITA, DEPENDIENDO DE SI LO ESTÁ O DE SI NO LO ESTÁ
+        //AGREGO O ELIMINO ESTA DE FAVORITAS
+        @if (esFavorita)
+        {
+            <a asp-controller="Emt" asp-action="EliminarFavorita" asp-route-codigo="@codigo">
+                <button class="btn-favorito">
+                    <img src="~/images/favorito_fill.png" alt="Eliminar de favoritos" />
+                </button>
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Emt" asp-action="AgregarFavorita" asp-route-codigo="@codigo">
+                <button class="btn-favorito">
+                    <img src="~/images/favoritos.png" alt="Añadir a favoritos" />
+                </button>
+            </a>
+        }
     }
 </div>
+
+<div id="formEditarNombre" class="mt-3" style="display: none;">
+    <form asp-controller="Emt" asp-action="AsignarAlias" method="post" class="d-flex gap-2 align-items-center">
+        <input type="hidden" name="codigo" value="@codigo" />
+        <input type="text" class="form-control" name="nuevoAlias" id="inputNuevoAlias" value="@nombreParada" placeholder="Nuevo nombre" required />
+        <button type="submit" class="btn btn-success">✓ Confirmar</button>
+        <button type="button" class="btn btn-secondary" onclick="cancelarEdicion()">Cancelar</button>
+    </form>
+</div>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        <strong>Éxito:</strong> @mensaje
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 @if (Model != null && Model.Count > 0)
 {
@@ -64,3 +109,19 @@ else
         <p>No se encontraron horarios para esta parada en este momento.</p>
     </div>
 }
+<script>
+    //SCRIPT PARA PODER MODIFICAR EL ALIAS DE LA PARADA FAVORITA EN CASO DE QUE EL USUARIO ESTE
+    //LOGADO, SI NO SE ESTÁ LOGADO NI SE TIENE LA PARADA COMO FAVORITA, EL USUARIO VERÁ EL NOMBRE ORIGINAL
+    function editarNombre() {
+        document.getElementById('tituloParada').style.display = 'none';
+        document.getElementById('btnEditarNombre').style.display = 'none';
+        document.getElementById('formEditarNombre').style.display = 'block';
+        document.getElementById('inputNuevoAlias').focus();
+    }
+
+    function cancelarEdicion() {
+        document.getElementById('tituloParada').style.display = 'block';
+        document.getElementById('btnEditarNombre').style.display = 'inline-block';
+        document.getElementById('formEditarNombre').style.display = 'none';
+    }
+</script>
