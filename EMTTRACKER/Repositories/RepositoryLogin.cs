@@ -34,30 +34,5 @@ namespace EMTTRACKER.Repositories
             }
             else return false;
         }
-
-        public async Task<string> Login(string email, string password)
-        {
-            Usuario user = await FindUsuarioEmailAsync(email);
-            if (user == null || await CheckPassword(email, password) == false)
-            {
-                return null;
-            }
-
-            var claims = new[]
-            {           
-                new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.NameIdentifier, user.IdUsuario.ToString())
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Tu_Clave_Secreta_Super_Larga_Y_Segura"));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddHours(8), // Duración
-                signingCredentials: creds
-            );
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
     }
 }

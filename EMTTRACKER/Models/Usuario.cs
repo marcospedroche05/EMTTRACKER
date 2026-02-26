@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EMTTRACKER.Models
 {
+    [Serializable]
     [Table("USUARIOS")]
     public class Usuario
     {

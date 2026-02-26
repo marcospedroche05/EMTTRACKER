@@ -8,15 +8,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar el esquema de Autenticación
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Login/Index"; // A dónde redirigir si no está logeado
-        options.AccessDeniedPath = "/Home/Index"; // A dónde ir si no tiene rol suficiente
-        options.ExpireTimeSpan = TimeSpan.FromHours(8); // Duración de la sesión
-    });
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -25,6 +16,13 @@ builder.Services.AddTransient<IRepositoryEmt, RepositoryEmt>();
 string connectionString = builder.Configuration.GetConnectionString("SqlEmt");
 builder.Services.AddDbContext<EmtContext>
     (options => options.UseSqlServer(connectionString));
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+});
+
 
 var app = builder.Build();
 
@@ -45,6 +43,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

@@ -2,15 +2,22 @@
 @{
     ViewData["COLORLAYOUT"] = "#2a5298";
     ViewData["CONTROLLER"] = ViewContext.RouteData.Values["Controller"]?.ToString();
+    int codigo = int.Parse(ViewData["CODIGO"].ToString());
+    Usuario usuario = Context.Session.GetObject<Usuario>("USUARIO");
 }
 
 <link rel="stylesheet" href="~/css/horas.css" />
 
 <div class="horas-header d-flex align-items-center justify-content-between">
     <h1 class="text-primary mb-0">Horas estimadas</h1>
-    <button class="btn-favorito">
-        <img src="~/images/favoritos.png" alt="Añadir a favoritos" />
-    </button>
+    @if(usuario != null)
+    {
+        <a asp-controller="Emt" asp-action="AgregarFavorita" asp-route-codigo="@codigo">
+            <button class="btn-favorito">
+                <img src="~/images/favoritos.png" alt="Añadir a favoritos" />
+            </button>
+        </a>
+    }
 </div>
 
 @if (Model != null && Model.Count > 0)

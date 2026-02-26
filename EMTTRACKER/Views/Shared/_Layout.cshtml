@@ -49,6 +49,26 @@
                                 </div>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            @if(Context.Session.GetObject<Usuario>("USUARIO") == null)
+                            {
+                                <a class="nav-link text-light" asp-area="" asp-controller="Login" asp-action="Index">
+                                    <div class="nav-icon-container">
+                                        <img src="~/images/login.png" alt="Login" />
+                                        <span class="nav-icon-label">Iniciar sesión</span>
+                                    </div>
+                                </a>
+                            } else
+                            {
+                                <a class="nav-link text-light" asp-area="" asp-controller="Login" asp-action="Logout">
+                                    <div class="nav-icon-container">
+                                        <img src="~/images/logout.png" alt="Logout" />
+                                        <span class="nav-icon-label">Cerrar sesión</span>
+                                    </div>
+                                </a>
+                            }
+
+                        </li>
                     </ul>
                 </div>
             </div>

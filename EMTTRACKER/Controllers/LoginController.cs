@@ -1,4 +1,6 @@
-﻿using EMTTRACKER.Models;
+﻿using EMTTRACKER.Extensions;
+using EMTTRACKER.Helpers;
+using EMTTRACKER.Models;
 using EMTTRACKER.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -23,33 +25,28 @@ namespace EMTTRACKER.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(UsuarioLogado usuarioLogado)
+        public async Task<IActionResult> Index(string email, string password)
         {
-            string token = await this.repo.Login(usuarioLogado.Email, usuarioLogado.Password);
-            if(token == null)
+            if(await this.repo.FindUsuarioEmailAsync(email) != null && await this.repo.CheckPassword(email, password) == true)
             {
-                ViewData["MENSAJE"] = "Correo electronico o contraseña incorrectos";
-                return View();
-            } else
-            {
-                Usuario user = await this.repo.FindUsuarioEmailAsync(usuarioLogado.Email);
-                // 2. Creamos la identidad (Claims)
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.Email),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim("IdUsuario", user.IdUsuario.ToString()),
-                    // Puedes añadir roles si los tienes: new Claim(ClaimTypes.Role, "Admin")
-                };
-
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
-
-                // 3. ¡Aquí ocurre la magia! El servidor crea la Cookie y la envía al navegador
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-                return RedirectToAction("Index", "Home");
+                Usuario usuario = await this.repo.FindUsuarioEmailAsync(email);
+                HttpContext.Session.SetObject("USUARIO", usuario);
+                return RedirectToAction("Index", "Menu");
             }
+            else
+            {
+                ViewData["MENSAJE"] = "Credenciales incorrectas";
+                return View();
+            }            
+        }
+
+        public IActionResult Logout()
+        {
+            if(HttpContext.Session.GetObject<Usuario>("USUARIO") != null)
+            {
+                HttpContext.Session.SetObject("USUARIO", null);
+            }
+            return RedirectToAction("Index", "Menu");
         }
     }
 }

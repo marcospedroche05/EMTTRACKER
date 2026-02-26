@@ -1,4 +1,5 @@
-﻿using EMTTRACKER.Models;
+﻿using EMTTRACKER.Extensions;
+using EMTTRACKER.Models;
 using EMTTRACKER.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,7 +38,30 @@ namespace EMTTRACKER.Controllers
         public async Task<IActionResult> Horas(int codigo)
         {
             List<VHorariosParadaUrbanos> horarios = await this.repo.GetHorariosParadaUrbano(codigo);
+            ViewData["CODIGO"] = codigo;
             return View(horarios);
         }
+
+        public async Task<IActionResult> AgregarFavorita(int codigo)
+        {
+            Usuario usuario = HttpContext.Session.GetObject<Usuario>("USUARIO");
+            VParadaUrbana parada = await this.repo.FindParadaUrbanoByCodigoAsync(codigo);
+            var paradaReal = await this.repo.GetParadaByCodigo(codigo);
+            await this.repo.InsertFavoritaAsync(usuario.IdUsuario, paradaReal.IdParada, parada.Nombre);
+            return RedirectToAction("Index");
+        }
+
+
+        //public async Task<IActionResult> GetFavoritasEmt()
+        //{
+        //    if(HttpContext.Session.GetObject<Usuario>("USUARIO") == null)
+        //    {
+        //        return RedirectToAction("Index", "Login");
+        //    } else
+        //    {
+
+        //        return View();
+        //    }
+        //}
     }
 }

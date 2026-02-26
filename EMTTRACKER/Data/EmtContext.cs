@@ -14,5 +14,23 @@ namespace EMTTRACKER.Data
         public DbSet<Linea> Lineas { get; set; }
         public DbSet<VHorariosParadaUrbanos> VistaHorariosUrbanos { get; set; }
         public DbSet<Favorita> Favoritas { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Favorita>(entity =>
+            {
+                entity.HasKey(f => new { f.IdUsuario, f.IdParada });
+                entity.ToTable("FAVORITAS");
+            });
+
+            modelBuilder.Entity<VParadaUrbana>()
+                .HasNoKey()
+                .ToView("V_Paradas_Emt");
+
+            modelBuilder.Entity<VHorariosParadaUrbanos>()
+                .ToView("V_HORARIOS_RUTAPARADA_URBANO");
+        }
     }
 }

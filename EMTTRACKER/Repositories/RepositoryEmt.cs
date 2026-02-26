@@ -160,5 +160,13 @@ namespace EMTTRACKER.Repositories
             this.context.Favoritas.Remove(favorita);
             await this.context.SaveChangesAsync();
         }
+
+        public async Task<Parada> GetParadaByCodigo(int codigo)
+        {
+            var consulta = from datos in this.context.Paradas
+                           where datos.Codigo == codigo
+                           select datos;
+            return await consulta.FirstOrDefaultAsync();
+        }
     }
 }
