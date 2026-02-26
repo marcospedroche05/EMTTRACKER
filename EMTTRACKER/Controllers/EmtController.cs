@@ -100,7 +100,7 @@ namespace EMTTRACKER.Controllers
         }
 
         //VISTA DE INDEX/BUSCADOR. ACTUALIZA LA LISTA CON UNICAMENTE PARADAS FAVORITAS
-        public async Task<IActionResult> GetFavoritasEmt()
+        public async Task<IActionResult> GetFavoritas()
         {
             if (HttpContext.Session.GetObject<Usuario>("USUARIO") == null)
             {

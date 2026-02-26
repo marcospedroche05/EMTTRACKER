@@ -13,6 +13,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<IRepositoryLogin, RepositoryLogin>();
 builder.Services.AddTransient<IRepositoryEmt, RepositoryEmt>();
+builder.Services.AddTransient<IRepositoryInterurbano, RepositoryInterurbano>();
 string connectionString = builder.Configuration.GetConnectionString("SqlEmt");
 builder.Services.AddDbContext<EmtContext>
     (options => options.UseSqlServer(connectionString));
