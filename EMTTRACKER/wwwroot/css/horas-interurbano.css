@@ -143,7 +143,7 @@
     border-radius: 10px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 20px;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
@@ -163,19 +163,26 @@
     font-weight: bold;
     min-width: 80px;
     text-align: center;
-    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.horario-direccion {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #212529;
+    flex-grow: 1;
 }
 
 .horario-hora {
     font-size: 1.4rem;
     font-weight: 600;
     color: #212529;
+    margin-left: auto;
 }
 
 .horario-tiempo {
     font-size: 1rem;
     color: #6c757d;
-    margin-left: auto;
     padding-left: 20px;
 }
 
@@ -243,13 +250,15 @@
         gap: 10px;
     }
 
-    .horario-linea {
-        margin-right: 0;
-        margin-bottom: 10px;
+    .horario-direccion {
+        font-size: 1rem;
+    }
+
+    .horario-hora {
+        margin-left: 0;
     }
 
     .horario-tiempo {
-        margin-left: 0;
         padding-left: 0;
     }
 }

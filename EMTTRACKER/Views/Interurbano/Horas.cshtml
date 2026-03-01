@@ -78,6 +78,7 @@
                 <h2 class="text-light m-0">@Model[0].Linea</h2>
             </div>
             <div class="proximo-bus-info">
+                <h4 class="mb-2 fw-bold">@Model[0].Direccion</h4>
                 <h4 class="mb-2">@Model[0].HoraEstimada</h4>
                 <span class="fw-bold">Quedan @minutos min.</span>
             </div>
@@ -96,6 +97,7 @@
 
                 <div class="horario-item">
                     <div class="horario-linea">@Model[i].Linea</div>
+                    <div class="horario-direccion fw-bold">@Model[i].Direccion</div>
                     <div class="horario-hora">@Model[i].HoraEstimada</div>
                 </div>
             }

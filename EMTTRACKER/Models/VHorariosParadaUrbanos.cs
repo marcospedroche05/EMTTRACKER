@@ -11,6 +11,8 @@ namespace EMTTRACKER.Models
         public long Id { get; set; }
         [Column("PARADA")]
         public int Codigo { get; set; }
+        [Column("DIRECCION")]
+        public string Direccion { get; set; }
         [Column("LINEA")]
         public string Linea { get; set; }
         [Column("HORAESTIMADA")]

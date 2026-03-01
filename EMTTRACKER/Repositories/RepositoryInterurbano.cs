@@ -2,6 +2,7 @@
 using EMTTRACKER.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
 #region VIEWS
 
@@ -31,8 +32,9 @@ using Microsoft.EntityFrameworkCore;
 //CREATE VIEW V_HORARIOS_RUTAPARADA_INTERURBANO
 //AS
 //	SELECT 
-//        ROW_NUMBER() OVER (ORDER BY L.CODIGO, H.HORASALIDA, P.CODIGO) AS ID,
+//        ROW_NUMBER() OVER (ORDER BY L.CODIGO, H.HORASALIDA, P.CODIGO, R.DIRECCION) AS ID,
 //        P.CODIGO AS PARADA,
+//        R.DIRECCION,
 //        L.CODIGO AS LINEA,
 //        CONVERT(VARCHAR(5), DATEADD(MINUTE, RP.TIEMPODESDEINICIO, H.HORASALIDA), 108) AS HORAESTIMADA 
 //    FROM HORARIOS H 
