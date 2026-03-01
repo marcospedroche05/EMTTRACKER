@@ -1,6 +1,9 @@
-﻿@{
+﻿@model List<VParadaCercanias>
+@{
     ViewData["COLORLAYOUT"] = "#cf3123";
     ViewData["CONTROLLER"] = ViewContext.RouteData.Values["Controller"]?.ToString();
+    List<VParadaCercanias> paradasFavoritas = ViewData["FAVORITAS"] as List<VParadaCercanias>;
+    VParadaCercanias paradaBuscada = ViewData["PARADABUSCADA"] as VParadaCercanias;
 }
 
 <div class="p-4 border-bottom border-1 border-danger d-flex w-100 align-items-center">
@@ -11,7 +14,7 @@
 
     <div class="ms-auto">
         <form method="post" class="d-flex gap-2">
-            <input class="form-control" name="codigo" type="text" placeholder="Código de parada" />
+            <input class="form-control" name="nombre" type="text" placeholder="Nombre de parada" />
             <button class="btn text-light" style="background-color: #cf3123">
                 Buscar
             </button>
@@ -19,3 +22,55 @@
     </div>
 
 </div>
+
+@if (paradaBuscada != null)
+{
+    <a asp-controller="Cercanias" asp-action="Horas" asp-route-idparada="@paradaBuscada.IdParada">
+        <div class="w-100 border-bottom border-1 border-danger p-3 d-flex align-items-center gap-3">
+            <img src="~/images/cercaniasRenfe.png" width="30" height="30" />
+            <h6 class="mb-0"><span class="fw-bold">@paradaBuscada.Nombre</span></h6>
+            <div class="d-flex gap-2 ms-auto flex-wrap">
+                @foreach (Linea linea in paradaBuscada.Lineas)
+                {
+                    <div class="badge bg-danger text-light">@linea.Codigo</div>
+                }
+            </div>
+        </div>
+    </a>
+}
+else if (paradasFavoritas != null)
+{
+    @foreach (VParadaCercanias parada in paradasFavoritas)
+    {
+        <a asp-controller="Cercanias" asp-action="Horas" asp-route-idparada="@parada.IdParada">
+            <div class="w-100 border-bottom border-1 border-danger p-3 d-flex align-items-center gap-3">
+                <img src="~/images/cercaniasRenfe.png" width="30" height="30" />
+                <h6 class="mb-0"><span class="fw-bold">@parada.Nombre</span></h6>
+                <div class="d-flex gap-2 ms-auto flex-wrap">
+                    @foreach (Linea linea in parada.Lineas)
+                    {
+                        <div class="badge bg-danger text-light">@linea.Codigo</div>
+                    }
+                </div>
+            </div>
+        </a>
+    }
+}
+else if (Model != null)
+{
+    @foreach (VParadaCercanias parada in Model)
+    {
+        <a asp-controller="Cercanias" asp-action="Horas" asp-route-idparada="@parada.IdParada">
+            <div class="w-100 border-bottom border-1 border-danger p-3 d-flex align-items-center gap-3">
+                <img src="~/images/cercaniasRenfe.png" width="30" height="30" />
+                <h6 class="mb-0"><span class="fw-bold">@parada.Nombre</span></h6>
+                <div class="d-flex gap-2 ms-auto flex-wrap">
+                    @foreach (Linea linea in parada.Lineas)
+                    {
+                        <div class="badge bg-danger text-light">@linea.Codigo</div>
+                    }
+                </div>
+            </div>
+        </a>
+    }
+}

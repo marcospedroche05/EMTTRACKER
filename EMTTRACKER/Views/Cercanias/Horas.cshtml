@@ -1,0 +1,130 @@
+﻿@model List<VHorariosParadaCercanias>
+@{
+    ViewData["COLORLAYOUT"] = "#cf3123";
+    ViewData["CONTROLLER"] = ViewContext.RouteData.Values["Controller"]?.ToString();
+    string nombreParada = ViewData["NOMBREPARADA"]?.ToString() ?? "";
+    bool esFavorita = ViewData["ESFAVORITA"] as bool? ?? false;
+    int idParada = int.Parse(ViewData["IDPARADA"].ToString());
+    Usuario usuario = Context.Session.GetObject<Usuario>("USUARIO");
+    string mensaje = TempData["MENSAJE"] as string;
+}
+
+<link rel="stylesheet" href="~/css/horas-cercanias.css" />
+
+<div class="horas-header d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-3 flex-grow-1">
+        <h1 class="mb-0" style="color: #cf3123;" id="tituloParada">Horas estimadas | <span id="nombreParada">@nombreParada</span></h1>
+        @if (usuario != null && esFavorita)
+        {
+            //SI ESTOY LOGADO Y TENGO ESTA PARADA COMO FAVORITA, PUEDO VER ESTE BOTON
+            //QUE ME PERMITE CAMBIAR EL ALIAS DE LA PARADA FAVORITA
+            <button type="button" class="btn-editar" id="btnEditarNombre" onclick="editarNombre()">
+                <img src="~/images/edit.png" width="24" height="24" alt="Editar" />
+            </button>
+        }
+    </div>
+
+    @if (usuario != null)
+    {
+        //COMPRUEBO SI EL USUARIO ESTÁ LOGADO, SI LO ESTÁ VEO SI LA PARADA EN LA QUE
+        //ESTOY ESTA REGISTRADA COMO FAVORITA, DEPENDIENDO DE SI LO ESTÁ O DE SI NO LO ESTÁ
+        //AGREGO O ELIMINO ESTA DE FAVORITAS
+        @if (esFavorita)
+        {
+            <a asp-controller="Cercanias" asp-action="EliminarFavorita" asp-route-idparada="@idParada">
+                <button class="btn-favorito">
+                    <img src="~/images/favorito_fill.png" alt="Eliminar de favoritos" />
+                </button>
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Cercanias" asp-action="AgregarFavorita" asp-route-idparada="@idParada">
+                <button class="btn-favorito">
+                    <img src="~/images/favoritos.png" alt="Añadir a favoritos" />
+                </button>
+            </a>
+        }
+    }
+</div>
+
+<div id="formEditarNombre" class="mt-3" style="display: none;">
+    <form asp-controller="Cercanias" asp-action="AsignarAlias" method="post" class="d-flex gap-2 align-items-center">
+        <input type="hidden" name="idParada" value="@idParada" />
+        <input type="text" class="form-control" name="nuevoAlias" id="inputNuevoAlias" value="@nombreParada" placeholder="Nuevo nombre" required />
+        <button type="submit" class="btn btn-danger">✓ Confirmar</button>
+        <button type="button" class="btn btn-secondary" onclick="cancelarEdicion()">Cancelar</button>
+    </form>
+</div>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+        <strong>Éxito:</strong> @mensaje
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (Model != null && Model.Count > 0)
+{
+    TimeSpan ahora = DateTime.Now.TimeOfDay;
+    TimeSpan horaTren = TimeSpan.Parse(Model[0].HoraEstimada);
+    int minutos = (int)(horaTren - ahora).TotalMinutes;
+
+    <div class="proximo-bus-container">
+        <h3 class="proximo-bus-label">Próximo tren</h3>
+        <div class="proximo-bus-card">
+            <div class="proximo-bus-linea d-flex justify-content-center align-items-center" style="background-color: #cf3123;">
+                <h2 class="text-light m-0">@Model[0].Linea</h2>
+            </div>
+            <div class="proximo-bus-info">
+                <h4 class="mb-2">@Model[0].Direccion</h4>
+                <h4 class="mb-2">@Model[0].HoraEstimada</h4>
+                <span class="fw-bold">Quedan @minutos min.</span>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Count > 1)
+    {
+        <div class="horarios-lista-container mb-4">
+            <h3 class="horarios-lista-titulo">Próximos horarios</h3>
+
+            @for (int i = 1; i < Model.Count; i++)
+            {
+                TimeSpan horaSiguiente = TimeSpan.Parse(Model[i].HoraEstimada);
+                int minutosSiguiente = (int)(horaSiguiente - ahora).TotalMinutes;
+
+                <div class="horario-item">
+                    <div class="horario-linea">@Model[i].Linea</div>
+                    <div class="horario-direccion">@Model[i].Direccion</div>
+                    <div class="horario-hora">@Model[i].HoraEstimada</div>
+                </div>
+            }
+        </div>
+    }
+}
+else
+{
+    <div class="sin-horarios">
+        <h3>No hay horarios disponibles</h3>
+        <p>No se encontraron horarios para esta parada en este momento.</p>
+    </div>
+}
+<script>
+    //SCRIPT PARA PODER MODIFICAR EL ALIAS DE LA PARADA FAVORITA EN CASO DE QUE EL USUARIO ESTE
+    //LOGADO, SI NO SE ESTÁ LOGADO NI SE TIENE LA PARADA COMO FAVORITA, EL USUARIO VERÁ EL NOMBRE ORIGINAL
+    function editarNombre() {
+        document.getElementById('tituloParada').style.display = 'none';
+        document.getElementById('btnEditarNombre').style.display = 'none';
+        document.getElementById('formEditarNombre').style.display = 'block';
+        document.getElementById('inputNuevoAlias').focus();
+    }
+
+    function cancelarEdicion() {
+        document.getElementById('tituloParada').style.display = 'block';
+        document.getElementById('btnEditarNombre').style.display = 'inline-block';
+        document.getElementById('formEditarNombre').style.display = 'none';
+    }
+</script>
+
