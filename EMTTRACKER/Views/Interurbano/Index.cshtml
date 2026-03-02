@@ -6,9 +6,19 @@
     VParadaInterurbana paradaBuscada = ViewData["PARADABUSCADA"] as VParadaInterurbana;
 }
 
+<style>
+    .parada-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+    .parada-link:hover {
+        text-decoration: none;
+        color: inherit;
+    }
+</style>
 
 <div class="p-4 border-bottom border-1 border-success d-flex w-100 align-items-center" style="border-color: limegreen">
-
     <div>
         <h2 class="mb-0">Buscador de buses <span style="color: limegreen">Interurbanos</span></h2>
     </div>
@@ -21,15 +31,14 @@
             </button>
         </form>
     </div>
-
 </div>
 
 @if (paradaBuscada != null)
 {
-    <a asp-controller="Interurbano" asp-action="Horas" asp-route-codigo="@paradaBuscada.Codigo">
+    <a asp-controller="Interurbano" asp-action="Horas" asp-route-codigo="@paradaBuscada.Codigo" class="parada-link">
         <div class="w-100 border-bottom border-1 border-success p-3 d-flex align-items-center gap-3">
             <img src="~/images/interurbano.png" width="50" height="30"/> 
-            <h6 class="mb-0"><span class="fw-bold">#@paradaBuscada.Codigo</span> | @paradaBuscada.Nombre</h6>
+            <h6 class="mb-0 text-dark"><span class="fw-bold">#@paradaBuscada.Codigo</span> | @paradaBuscada.Nombre</h6>
             <div class="d-flex gap-2 ms-auto flex-wrap">
                 @foreach (Linea linea in paradaBuscada.Lineas)
                 {
@@ -43,10 +52,10 @@ else if (paradasFavoritas != null)
 {
     @foreach (VParadaInterurbana parada in paradasFavoritas)
     {
-        <a asp-controller="Interurbano" asp-action="Horas" asp-route-codigo="@parada.Codigo">
+        <a asp-controller="Interurbano" asp-action="Horas" asp-route-codigo="@parada.Codigo" class="parada-link">
             <div class="w-100 border-bottom border-1 border-success p-3 d-flex align-items-center gap-3">
                 <img src="~/images/interurbano.png" width="50" height="30" />
-                <h6 class="mb-0"><span class="fw-bold">#@parada.Codigo</span> | @parada.Nombre</h6>
+                <h6 class="mb-0 text-dark"><span class="fw-bold">#@parada.Codigo</span> | @parada.Nombre</h6>
                 <div class="d-flex gap-2 ms-auto flex-wrap">
                     @foreach (Linea linea in parada.Lineas)
                     {
@@ -61,10 +70,10 @@ else if (Model != null)
 {
     @foreach (VParadaInterurbana parada in Model)
     {
-        <a asp-controller="Interurbano" asp-action="Horas" asp-route-codigo="@parada.Codigo">
+        <a asp-controller="Interurbano" asp-action="Horas" asp-route-codigo="@parada.Codigo" class="parada-link">
             <div class="w-100 border-bottom border-1 border-success p-3 d-flex align-items-center gap-3">
                 <img src="~/images/interurbano.png" width="50" height="30" />
-                <h6 class="mb-0"><span class="fw-bold">#@parada.Codigo</span> | @parada.Nombre</h6>
+                <h6 class="mb-0 text-dark"><span class="fw-bold">#@parada.Codigo</span> | @parada.Nombre</h6>
                 <div class="d-flex gap-2 ms-auto flex-wrap">
                     @foreach (Linea linea in parada.Lineas)
                     {
