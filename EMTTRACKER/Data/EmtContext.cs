@@ -18,6 +18,7 @@ namespace EMTTRACKER.Data
         public DbSet<VHorariosParadaInterurbanos> VistaHorariosInterurbanos { get; set; }
         public DbSet<VHorariosParadaCercanias> VistaHorariosCercanias { get; set; }
         public DbSet<Favorita> Favoritas { get; set; }
+        public DbSet<Incidencia> Incidencias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
