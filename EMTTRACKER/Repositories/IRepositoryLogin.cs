@@ -6,5 +6,6 @@ namespace EMTTRACKER.Repositories
     {
         public Task<Usuario> FindUsuarioEmailAsync(string email);
         public Task<bool> CheckPassword(string email, string password);
+        public Task Registrar(string nombre, string email, string password);
     }
 }

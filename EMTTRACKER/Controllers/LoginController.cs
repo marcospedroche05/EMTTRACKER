@@ -48,5 +48,25 @@ namespace EMTTRACKER.Controllers
             }
             return RedirectToAction("Index", "Menu");
         }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> Register(string nombre, string email, string password)
+        {
+            if(await this.repo.FindUsuarioEmailAsync(email) != null)
+            {
+                ViewData["MENSAJE"] = "Ya existe un usuario con este email";
+                return View();
+            } 
+            else
+            {
+                await this.repo.Registrar(nombre, email, password);
+                return RedirectToAction("Index");
+            }
+        }
     }
 }

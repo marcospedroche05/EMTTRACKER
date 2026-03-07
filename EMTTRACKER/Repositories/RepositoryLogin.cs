@@ -34,5 +34,28 @@ namespace EMTTRACKER.Repositories
             }
             else return false;
         }
+
+        public async Task Registrar(string nombre, string email, string password)
+        {
+            int idUsuario = await GetUltimoIdUsuario() + 1;
+            Usuario nuevoUsuario = new Usuario
+            {
+                IdUsuario = idUsuario,
+                Nombre = nombre,
+                Email = email,
+                Password = password
+            };
+            await this.context.Usuarios.AddAsync(nuevoUsuario);
+            await this.context.SaveChangesAsync();
+        }
+        
+        private async Task<int> GetUltimoIdUsuario()
+        {
+            var consulta = from datos in this.context.Usuarios
+                           select datos;
+            List<Usuario> usuarios = await consulta.ToListAsync();
+            int ultimoId = usuarios.MaxBy(x => x.IdUsuario).IdUsuario;
+            return ultimoId;
+        }
     }
 }
