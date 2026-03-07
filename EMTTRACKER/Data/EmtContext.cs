@@ -19,6 +19,8 @@ namespace EMTTRACKER.Data
         public DbSet<VHorariosParadaCercanias> VistaHorariosCercanias { get; set; }
         public DbSet<Favorita> Favoritas { get; set; }
         public DbSet<Incidencia> Incidencias { get; set; }
+        public DbSet<UsuarioSeguridad> UsuariosSeguridad { get; set; }
+        public DbSet<VUsuarioSeguridad> VistaUsuariosSeguridad { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,6 +52,10 @@ namespace EMTTRACKER.Data
 
             modelBuilder.Entity<VHorariosParadaCercanias>()
                 .ToView("V_HORARIOS_RUTAPARADA_CERCANIAS");
+
+            modelBuilder.Entity<VUsuarioSeguridad>()
+                .HasNoKey()
+                .ToView("V_USUARIO_SEGURIDAD");
         }
     }
 }

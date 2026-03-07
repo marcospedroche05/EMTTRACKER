@@ -27,17 +27,17 @@ namespace EMTTRACKER.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(string email, string password)
         {
-            if(await this.repo.FindUsuarioEmailAsync(email) != null && await this.repo.CheckPassword(email, password) == true)
-            {
-                Usuario usuario = await this.repo.FindUsuarioEmailAsync(email);
-                HttpContext.Session.SetObject("USUARIO", usuario);
-                return RedirectToAction("Index", "Menu");
-            }
-            else
+            VUsuarioSeguridad usuarioLogado = await this.repo.LogInUserAsync(email, password);
+            if(usuarioLogado == null)
             {
                 ViewData["MENSAJE"] = "Credenciales incorrectas";
                 return View();
-            }            
+            } else
+            {
+                Usuario user = await this.repo.FindUsuarioEmailAsync(email);
+                HttpContext.Session.SetObject("USUARIO", user);
+                return RedirectToAction("Index", "Menu");
+            }    
         }
 
         public IActionResult Logout()
@@ -64,7 +64,7 @@ namespace EMTTRACKER.Controllers
             } 
             else
             {
-                await this.repo.Registrar(nombre, email, password);
+                await this.repo.RegistrarAsync(nombre, email, password);
                 return RedirectToAction("Index");
             }
         }
