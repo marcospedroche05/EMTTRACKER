@@ -16,6 +16,7 @@ builder.Services.AddTransient<IRepositoryEmt, RepositoryEmt>();
 builder.Services.AddTransient<IRepositoryInterurbano, RepositoryInterurbano>();
 builder.Services.AddTransient<IRepositoryCercanias, RepositoryCercanias>();
 builder.Services.AddTransient<IRepositoryIncidencias, RepositoryIncidencias>();
+builder.Services.AddTransient<IRepositoryGestionParadas, RepositoryGestionParadas>();
 string connectionString = builder.Configuration.GetConnectionString("SqlEmt");
 builder.Services.AddDbContext<EmtContext>
     (options => options.UseSqlServer(connectionString));

@@ -1,0 +1,67 @@
+@model Parada
+@{
+    ViewData["COLORLAYOUT"] = "#2a5298";
+}
+
+<div class="p-4 border-bottom border-1 border-primary d-flex w-100 align-items-center">
+    <div>
+        <h2 class="mb-0 text-primary">Nueva Parada</h2>
+    </div>
+</div>
+
+<div class="p-4 d-flex justify-content-center">
+    <div class="card shadow-sm border-primary w-100" style="max-width: 500px;">
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post" id="formParada">
+                
+                <div class="mb-4 bg-light p-3 rounded border">
+                    <div class="form-check form-switch d-flex align-items-center mb-0">
+                        <input class="form-check-input mt-0 me-3" type="checkbox" role="switch" id="switchCercanias" style="width: 2.5em; height: 1.25em;">
+                        <label class="form-check-label fw-bold text-dark" for="switchCercanias">
+                            Esta parada es de Cercanías
+                        </label>
+                    </div>
+                    <small class="text-muted ms-5 d-block mt-1">Si está activo, no se requerirá un código de parada.</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-primary">Nombre de la Parada</label>
+                    <input type="text" name="nombre" class="form-control" placeholder="Ej: Atocha, Sol..." required />
+                </div>
+
+                <div class="mb-3" id="containerCodigo">
+                    <label class="form-label fw-bold text-primary">Código</label>
+                    <input type="number" name="codigo" id="inputCodigo" class="form-control" placeholder="Ej: 154" required />
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary text-light">Crear Parada</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const switchCercanias = document.getElementById("switchCercanias");
+        const containerCodigo = document.getElementById("containerCodigo");
+        const inputCodigo = document.getElementById("inputCodigo");
+
+        switchCercanias.addEventListener("change", function () {
+            if (this.checked) {
+                // Es de cercanías: desactivar y ocultar (o difuminar) el campo de código
+                inputCodigo.disabled = true;
+                inputCodigo.removeAttribute("required");
+                inputCodigo.value = ""; // Limpiar el valor
+                containerCodigo.style.opacity = "0.5";
+            } else {
+                // Es normal: habilitar y requerir
+                inputCodigo.disabled = false;
+                inputCodigo.setAttribute("required", "required");
+                containerCodigo.style.opacity = "1";
+            }
+        });
+    });
+</script>

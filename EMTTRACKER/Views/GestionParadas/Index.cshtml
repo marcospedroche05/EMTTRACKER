@@ -1,0 +1,73 @@
+@model List<Parada>
+@{
+    ViewData["COLORLAYOUT"] = "#2a5298";
+}
+
+<div class="p-4 border-bottom border-1 border-primary d-flex w-100 align-items-center">
+    <div>
+        <h2 class="mb-0">Gestión de <span class="text-primary">Paradas</span></h2>
+    </div>
+    <div class="ms-auto">
+        <a asp-action="Create" class="btn btn-primary text-light">Nueva Parada</a>
+    </div>
+</div>
+
+<div class="p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle shadow-sm">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Código</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Tipo App</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.IdParada</td>
+                            <td>
+                                @if(item.Codigo.HasValue)
+                                {
+                                    <span class="badge bg-secondary">#@item.Codigo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge" style="background-color: #cf3123;">N/A</span>
+                                }
+                            </td>
+                            <td class="fw-bold text-primary">@item.Nombre</td>
+                            <td>
+                                @if(item.Codigo.HasValue)
+                                {
+                                    <span class="badge bg-primary">Bus (EMT/Int.)</span>
+                                }
+                                else
+                                {
+                                    <span class="badge" style="background-color: #cf3123;">Cercanías</span>
+                                }
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.IdParada" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+                                <a asp-action="Delete" asp-route-id="@item.IdParada" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Seguro que deseas eliminar esta parada?');">Eliminar</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            No hay paradas registradas
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
