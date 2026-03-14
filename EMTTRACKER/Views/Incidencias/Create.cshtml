@@ -1,0 +1,45 @@
+@model Incidencia
+@{
+    ViewData["COLORLAYOUT"] = "#2a5298";
+}
+
+<div class="p-4 border-bottom border-1 border-primary d-flex w-100 align-items-center">
+    <div>
+        <h2 class="mb-0 text-primary">Nueva Incidencia</h2>
+    </div>
+</div>
+
+<div class="p-4 d-flex justify-content-center">
+    <div class="card shadow-sm border-primary w-100" style="max-width: 600px;">
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-primary">Título</label>
+                    <input type="text" name="titulo" class="form-control" placeholder="Ej: Obras en Línea 2" required />
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-primary">Mensaje</label>
+                    <textarea name="mensaje" class="form-control" rows="4" placeholder="Describe los detalles de la incidencia..." required></textarea>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-primary">Fecha y Hora de Inicio</label>
+                        <input type="datetime-local" name="fechainicio" class="form-control" required />
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-primary">Fecha y Hora de Fin</label>
+                        <input type="datetime-local" name="fechafin" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary text-light">Guardar Incidencia</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

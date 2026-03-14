@@ -1,0 +1,61 @@
+@model List<Incidencia>
+@{
+    ViewData["COLORLAYOUT"] = "#2a5298";
+}
+
+<div class="p-4 border-bottom border-1 border-primary d-flex w-100 align-items-center">
+    <div>
+        <h2 class="mb-0">Gestión de <span class="text-primary">Incidencias</span></h2>
+    </div>
+    <div class="ms-auto">
+        <a asp-action="Create" class="btn btn-primary text-light">Nueva Incidencia</a>
+    </div>
+</div>
+
+<div class="p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle shadow-sm">
+            <thead class="table-primary">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Título</th>
+                    <th scope="col">Mensaje</th>
+                    <th scope="col">Inicio</th>
+                    <th scope="col">Fin</th>
+                    <th scope="col" class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.IdIncidencia</td>
+                            <td class="fw-bold text-primary">@item.Titulo</td>
+                            <td>
+                                <div class="text-truncate" style="max-width: 250px;" title="@item.Mensaje">
+                                    @item.Mensaje
+                                </div>
+                            </td>
+                            <td>@item.FechaInicio.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@item.FechaFin.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.IdIncidencia" class="btn btn-sm btn-outline-primary me-1">Editar</a>
+                                <a asp-action="Delete" asp-route-id="@item.IdIncidencia" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Seguro que deseas eliminar esta incidencia?');">Eliminar</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            No hay incidencias registradas o activas
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
