@@ -50,7 +50,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            @if(Context.Session.GetObject<Usuario>("USUARIO") == null)
+                            @if(Context.User.Identity.IsAuthenticated == false)
                             {
                                 <a class="nav-link text-light" asp-area="" asp-controller="Login" asp-action="Index">
                                     <div class="nav-icon-container">

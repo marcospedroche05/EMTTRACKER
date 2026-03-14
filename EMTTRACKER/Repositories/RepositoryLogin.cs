@@ -84,7 +84,8 @@ namespace EMTTRACKER.Repositories
                 IdUsuario = idUsuario,
                 Nombre = nombre,
                 Email = email,
-                Password = password
+                Password = password,
+                Rol = "USUARIO"
             };
             await this.context.Usuarios.AddAsync(nuevoUsuario);
             await this.context.SaveChangesAsync();
@@ -96,8 +97,15 @@ namespace EMTTRACKER.Repositories
             var consulta = from datos in this.context.Usuarios
                            select datos;
             List<Usuario> usuarios = await consulta.ToListAsync();
-            int ultimoId = usuarios.MaxBy(x => x.IdUsuario).IdUsuario;
-            return ultimoId;
+            Usuario user = usuarios.MaxBy(x => x.IdUsuario);
+            if (user == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return user.IdUsuario;
+            }
         }
     }
 }

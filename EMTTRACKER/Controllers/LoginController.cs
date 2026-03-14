@@ -35,17 +35,25 @@ namespace EMTTRACKER.Controllers
             } else
             {
                 Usuario user = await this.repo.FindUsuarioEmailAsync(email);
-                HttpContext.Session.SetObject("USUARIO", user);
+
+                ClaimsIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme,
+                                                                ClaimTypes.NameIdentifier, ClaimTypes.Role);
+
+                Claim claimId = new Claim(ClaimTypes.NameIdentifier, user.IdUsuario.ToString());
+                identity.AddClaim(claimId);
+                Claim claimRole = new Claim(ClaimTypes.Role, user.Rol);
+                identity.AddClaim(claimRole);
+
+                ClaimsPrincipal userPrincipal = new ClaimsPrincipal(identity);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, userPrincipal);
+
                 return RedirectToAction("Index", "Menu");
             }    
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            if(HttpContext.Session.GetObject<Usuario>("USUARIO") != null)
-            {
-                HttpContext.Session.SetObject("USUARIO", null);
-            }
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Menu");
         }
 

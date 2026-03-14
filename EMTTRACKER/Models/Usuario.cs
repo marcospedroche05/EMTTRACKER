@@ -16,5 +16,7 @@ namespace EMTTRACKER.Models
         public string Email { get; set; }
         [Column("PASSWD")]
         public string Password { get; set; }
+        [Column("ROL")]
+        public string Rol { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using EMTTRACKER.Models;
+﻿using EMTTRACKER.Filters;
+using EMTTRACKER.Models;
 using EMTTRACKER.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,7 @@ namespace EMTTRACKER.Controllers
             this.repo = repo;
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         public async Task<IActionResult> Index()
         {
             var lista = await this.repo.GetAllIncidenciasAsync();
@@ -24,11 +26,13 @@ namespace EMTTRACKER.Controllers
             return Ok(lista);
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         public IActionResult Create()
         {
             return View();
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         [HttpPost]
         public async Task<IActionResult> Create(string titulo, string mensaje, DateTime fechainicio, DateTime fechafin)
         {
@@ -36,6 +40,7 @@ namespace EMTTRACKER.Controllers
             return RedirectToAction("Index");
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         public async Task<IActionResult> Edit(int id)
         {
             Incidencia incidencia = await this.repo.FindIncidenciaAsync(id);
@@ -43,6 +48,7 @@ namespace EMTTRACKER.Controllers
             return View(incidencia);
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         [HttpPost]
         public async Task<IActionResult> Edit(int idincidencia, string titulo, string mensaje, DateTime fechainicio, DateTime fechafin)
         {
@@ -50,6 +56,7 @@ namespace EMTTRACKER.Controllers
             return RedirectToAction("Index");
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         public async Task<IActionResult> Delete(int id)
         {
             await this.repo.DeleteIncidenciaAsync(id);

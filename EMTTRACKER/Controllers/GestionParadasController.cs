@@ -1,3 +1,4 @@
+using EMTTRACKER.Filters;
 using EMTTRACKER.Models;
 using EMTTRACKER.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -13,17 +14,20 @@ namespace EMTTRACKER.Controllers
             this.repo = repo;
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         public async Task<IActionResult> Index()
         {
             var paradas = await this.repo.GetAllParadasAsync();
             return View(paradas);
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         public IActionResult Create()
         {
             return View();
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         [HttpPost]
         public async Task<IActionResult> Create(int? codigo, string nombre)
         {
@@ -31,6 +35,7 @@ namespace EMTTRACKER.Controllers
             return RedirectToAction("Index");
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         public async Task<IActionResult> Edit(int id)
         {
             Parada parada = await this.repo.FindParadaAsync(id);
@@ -41,6 +46,7 @@ namespace EMTTRACKER.Controllers
             return View(parada);
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         [HttpPost]
         public async Task<IActionResult> Edit(int idparada, int? codigo, string nombre)
         {
@@ -48,6 +54,7 @@ namespace EMTTRACKER.Controllers
             return RedirectToAction("Index");
         }
 
+        [AuthorizeAdmin(Policy = "ADMINONLY")]
         public async Task<IActionResult> Delete(int id)
         {
             await this.repo.DeleteParadaAsync(id);

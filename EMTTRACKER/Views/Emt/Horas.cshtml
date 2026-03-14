@@ -5,7 +5,6 @@
     string nombreParada = ViewData["NOMBREPARADA"]?.ToString() ?? "";
     bool esFavorita = ViewData["ESFAVORITA"] as bool? ?? false;
     int codigo = int.Parse(ViewData["CODIGO"].ToString());
-    Usuario usuario = Context.Session.GetObject<Usuario>("USUARIO");
     string mensaje = TempData["MENSAJE"] as string;
 }
 
@@ -14,7 +13,7 @@
 <div class="horas-header d-flex align-items-center justify-content-between">
     <div class="d-flex align-items-center gap-3 flex-grow-1">
         <h1 class="text-primary mb-0" id="tituloParada">Horas estimadas | <span id="nombreParada">@nombreParada</span></h1>
-        @if(usuario != null && esFavorita)
+        @if(Context.User.Identity.IsAuthenticated && esFavorita)
         {
             //SI ESTOY LOGADO Y TENGO ESTA PARADA COMO FAVORITA, PUEDO VER ESTE BOTON
             //QUE ME PERMITE CAMBIAR EL ALIAS DE LA PARADA FAVORITA
@@ -24,7 +23,7 @@
         }
     </div>
     
-    @if(usuario != null)
+    @if(Context.User.Identity.IsAuthenticated)
     {
         //COMPRUEBO SI EL USUARIO ESTÁ LOGADO, SI LO ESTÁ VEO SI LA PARADA EN LA QUE 
         //ESTOY ESTA REGISTRADA COMO FAVORITA, DEPENDIENDO DE SI LO ESTÁ O DE SI NO LO ESTÁ

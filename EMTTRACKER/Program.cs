@@ -7,9 +7,25 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, config =>
+{
+    config.AccessDeniedPath = "/Managed/ErrorAcceso";
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ADMINONLY", policy => policy.RequireRole("ADMIN"));
+});
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options => options.EnableEndpointRouting = false).AddSessionStateTempDataProvider();
 
 builder.Services.AddTransient<IRepositoryLogin, RepositoryLogin>();
 builder.Services.AddTransient<IRepositoryEmt, RepositoryEmt>();
@@ -39,21 +55,17 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseRouting();
+app.UseStaticFiles();
 
 // MIDDLEWARE DE AUTENTICACIÓN
 app.UseAuthentication();
-
 app.UseAuthorization();
-
-app.MapStaticAssets();
-
 app.UseSession();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Menu}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+app.UseMvc(routes =>
+{
+    routes.MapRoute(name: "default",
+        template: "{controller=Menu}/{action=Index}/{id?}");
+});
 
 app.Run();

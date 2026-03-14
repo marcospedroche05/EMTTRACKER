@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Acceso Denegado";
+    ViewData["COLORLAYOUT"] = "#2a5298";
+}
+
+<div class="d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="text-center px-4" style="max-width: 600px;">
+        
+        <h1 class="text-primary fw-bold mb-3" style="font-size: 2.5rem;">Acceso Denegado</h1>
+        
+        <h4 class="text-dark mb-4 fw-semibold">No tienes permisos para ver esta página</h4>
+        
+        <p class="text-muted fs-5 mb-5 lh-lg">
+            Lo sentimos, pero parece que estás intentando acceder a una sección administrativa restringida. 
+            Es necesario iniciar sesión con una cuenta de <strong>administrador</strong> para continuar.
+        </p>
+        
+        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+            <a asp-controller="Login" asp-action="Index" class="btn btn-primary px-4 py-3 fw-bold rounded-pill shadow-sm hover-up">
+                Volver al Login
+            </a>
+            <a asp-controller="Menu" asp-action="Index" class="btn btn-outline-primary px-4 py-3 fw-bold rounded-pill hover-up">
+                Ir al Menú Principal
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .hover-up {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-up:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(42, 82, 152, 0.15) !important;
+    }
+</style>

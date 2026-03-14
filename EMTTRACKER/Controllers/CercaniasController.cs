@@ -2,6 +2,7 @@
 using EMTTRACKER.Models;
 using EMTTRACKER.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EMTTRACKER.Controllers
@@ -39,10 +40,10 @@ namespace EMTTRACKER.Controllers
         public async Task<IActionResult> Horas(int idparada)
         {
             var paradaReal = await this.repo.GetParadaById(idparada);
-            if (HttpContext.Session.GetObject<Usuario>("USUARIO") != null)
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
-                Usuario usuario = HttpContext.Session.GetObject<Usuario>("USUARIO");
-                Favorita paradaFavorita = await this.repo.FindFavoritaAsync(usuario.IdUsuario, paradaReal.IdParada);
+                int usuario = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+                Favorita paradaFavorita = await this.repo.FindFavoritaAsync(usuario, paradaReal.IdParada);
 
                 if (paradaFavorita != null)
                 {
@@ -67,21 +68,21 @@ namespace EMTTRACKER.Controllers
         //VISTA DE HORARIOS.
         public async Task<IActionResult> AgregarFavorita(int idparada)
         {
-            Usuario usuario = HttpContext.Session.GetObject<Usuario>("USUARIO");
+            int usuario = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var paradaReal = await this.repo.GetParadaById(idparada);
             VParadaCercanias parada = await this.repo.FindParadaCercaniasByNombreAsync(paradaReal.Nombre);
             // Agregar a favoritos y redirigir con mensaje de éxito
             ViewData["IDPARADA"] = idparada;
-            await this.repo.InsertFavoritaAsync(usuario.IdUsuario, paradaReal.IdParada, parada.Nombre);
+            await this.repo.InsertFavoritaAsync(usuario, paradaReal.IdParada, parada.Nombre);
             return RedirectToAction("Horas", new { idparada = idparada });
         }
 
         //VISTA DE HORARIOS.
         public async Task<IActionResult> EliminarFavorita(int idparada)
         {
-            Usuario usuario = HttpContext.Session.GetObject<Usuario>("USUARIO");
+            int usuario = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var paradaReal = await this.repo.GetParadaById(idparada);
-            await this.repo.DeleteFavoritaAsync(usuario.IdUsuario, paradaReal.IdParada);
+            await this.repo.DeleteFavoritaAsync(usuario, paradaReal.IdParada);
             return RedirectToAction("Horas", new { idparada = idparada });
         }
 
@@ -89,14 +90,14 @@ namespace EMTTRACKER.Controllers
         [HttpPost]
         public async Task<IActionResult> AsignarAlias(int idparada, string nuevoAlias)
         {
-            Usuario usuario = HttpContext.Session.GetObject<Usuario>("USUARIO");
-            if (usuario == null)
+            if (HttpContext.User.Identity.IsAuthenticated == false)
             {
                 return RedirectToAction("Index", "Login");
             }
+            int usuario = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var paradaReal = await this.repo.GetParadaById(idparada);
-            await this.repo.AsignarAlias(usuario.IdUsuario, paradaReal.IdParada, nuevoAlias);
+            await this.repo.AsignarAlias(usuario, paradaReal.IdParada, nuevoAlias);
             TempData["MENSAJE"] = "Alias modificado correctamente";
             return RedirectToAction("Horas", new { idparada = idparada });
         }
@@ -104,14 +105,14 @@ namespace EMTTRACKER.Controllers
         //VISTA DE INDEX/BUSCADOR. ACTUALIZA LA LISTA CON UNICAMENTE PARADAS FAVORITAS
         public async Task<IActionResult> GetFavoritas()
         {
-            if (HttpContext.Session.GetObject<Usuario>("USUARIO") == null)
+            if (HttpContext.User.Identity.IsAuthenticated == false)
             {
                 return RedirectToAction("Index", "Login");
             }
             else
             {
-                Usuario usuario = HttpContext.Session.GetObject<Usuario>("USUARIO");
-                List<VParadaCercanias> favoritasCercanias = await this.repo.GetFavoritasCercaniasAsync(usuario.IdUsuario);
+                int usuario = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+                List<VParadaCercanias> favoritasCercanias = await this.repo.GetFavoritasCercaniasAsync(usuario);
                 if (favoritasCercanias != null)
                 {
                     favoritasCercanias = favoritasCercanias.OrderBy(x => x.Nombre).ToList();
